@@ -39,3 +39,5 @@ mksrcinfo
 git add --all
 git commit -m "update from $git_origin"
 git push ssh+git://aur@aur4.archlinux.org/${pkg_name}.git/
+cd ../..
+rm -rf aur4

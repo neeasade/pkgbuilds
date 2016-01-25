@@ -3,6 +3,8 @@
 
 set -e
 
+cd $(dirname $0)
+
 if [ $# -lt 1 ]
 then
     echo "usage: $(basename $0) <path/to/project>" >&2
@@ -10,6 +12,7 @@ then
 fi
 
 git_root=$(realpath "$(git rev-parse --git-dir)/..")/
+git_origin=$(git remote -v | head -n 1 | grep -oP '\t[^ ]+ ' | tr -d '[:blank:]')
 pkg_path=$(realpath "$1")
 pkg_name=$(basename "$pkg_path")
 
@@ -22,10 +25,17 @@ then
     exit -1
 fi
 
-# Split the package into a branch
-git subtree split --prefix="$prefix" -b $branch
+[ ! -d aur4 ] && mkdir aur4
 
-git pull ssh+git://aur@aur4.archlinux.org/${pkg_name}.git/
+cd aur4
+[ -d $pkg_name ] && rm -rf $pkg_name
 
-git push ssh+git://aur@aur4.archlinux.org/${pkg_name}.git/ $branch:master
-git branch -D $branch
+git clone ssh+git://aur@aur4.archlinux.org/${pkg_name}.git/
+cd $pkg_name
+
+cp -r ../../$pkg_name/* .
+mksrcinfo
+
+git add --all
+git commit -m "update from $git_origin"
+git push ssh+git://aur@aur4.archlinux.org/${pkg_name}.git/

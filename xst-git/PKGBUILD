@@ -1,12 +1,12 @@
 # Maintainer: Nathan Isom <Nahanisom27 at gmail [dot] com >
 # derived from st-git aur package.
 
-_pkgname=shit
+_pkgname=xst
 pkgname=${_pkgname}-git
 pkgver=20160407.74c6832
 pkgrel=1
 pkgdesc='st fork'
-url='https://github.com/neeasade/shit'
+url='https://github.com/neeasade/xst'
 arch=('i686' 'x86_64')
 license=('MIT')
 depends=('libxft')

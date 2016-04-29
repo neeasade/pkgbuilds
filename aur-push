@@ -5,29 +5,25 @@ set -e
 
 cd $(dirname $0)
 
-if [ $# -lt 1 ]
-then
+which mksrcinfo || exit 1
+
+if [ $# -lt 1 ]; then
     echo "usage: $(basename $0) <path/to/project>" >&2
     exit -1
 fi
 
-git_root=$(realpath "$(git rev-parse --git-dir)/..")/
 git_origin=$(git remote -v | head -n 1 | grep -oP '\t[^ ]+ ' | tr -d '[:blank:]')
 pkg_path=$(realpath "$1")
 pkg_name=$(basename "$pkg_path")
 
-prefix=${pkg_path#$git_root}
-branch=aur4/$pkg_name
-
-if [[ ! -d "$pkg_path" || ! -e "${pkg_path}/PKGBUILD" ]]
-then
+if [ ! -d "$pkg_path" || ! -e "${pkg_path}/PKGBUILD" ]; then
     echo "$pkg_name does not contain a PKGBUILD" >&2
     exit -1
 fi
 
 [ ! -d aur4 ] && mkdir aur4
-
 cd aur4
+
 [ -d $pkg_name ] && rm -rf $pkg_name
 
 git clone ssh+git://aur@aur4.archlinux.org/${pkg_name}.git/

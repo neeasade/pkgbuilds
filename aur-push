@@ -16,7 +16,7 @@ git_origin=$(git remote -v | head -n 1 | grep -oP '\t[^ ]+ ' | tr -d '[:blank:]'
 pkg_path=$(realpath "$1")
 pkg_name=$(basename "$pkg_path")
 
-if [ ! -d "$pkg_path" || ! -e "${pkg_path}/PKGBUILD" ]; then
+if [ ! -d "$pkg_path" ] || [ ! -e "${pkg_path}/PKGBUILD" ]; then
     echo "$pkg_name does not contain a PKGBUILD" >&2
     exit -1
 fi
